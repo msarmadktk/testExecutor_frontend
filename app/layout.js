@@ -28,7 +28,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider signUpFallbackRedirectUrl="/select-role">
       <html lang="en">
         <body>
           {children}

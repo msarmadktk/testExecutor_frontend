@@ -2,10 +2,11 @@
 import React from 'react';
 import { Button } from './ui/button';
 import { useRouter } from 'next/navigation'; 
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 
 const Navbar = () => {
   const router = useRouter();
+  const { user } = useUser(); // Get user data when signed in
 
   const handleLogin = () => {
     router.push('/sign-in');
@@ -23,7 +24,7 @@ const Navbar = () => {
       </div>
       <div className='flex justify-between items-center mx-2'>
         <SignedOut>
-          <Button onClick={handleLogin} >Sign In</Button>
+          <Button onClick={handleLogin}>Sign In</Button>
         </SignedOut>
         <SignedIn>
           <UserButton afterSignOutUrl='/' />
