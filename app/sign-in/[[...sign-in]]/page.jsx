@@ -18,20 +18,11 @@ export default function Page() {
       }
     }
 
-    // Print the redirect URL for debugging
-    console.log('Redirect URL:', redirectUrl);
-
-    // Add a short delay before rendering the <SignIn> component
-    const timer = setTimeout(() => {
-      setIsReadyToRender(true);
-    }, 1000); // Adjust the delay as needed (e.g., 1000ms for 1 second)
-
-    return () => clearTimeout(timer); // Clean up the timer when the component unmounts
   }, [isSignedIn, user, redirectUrl]); // Added `redirectUrl` as a dependency to log updates
 
   return (
     <div className='flex justify-center items-center mt-8'>
-      {isReadyToRender && <SignIn fallbackRedirectUrl={redirectUrl} />}
+      <SignIn fallbackRedirectUrl={redirectUrl} />
     </div>
   );
 }
