@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 export default function Page() {
   const { user, isSignedIn } = useUser();
-  const [redirectUrl, setRedirectUrl] = useState('/dashboard');
+  const [redirectUrl, setRedirectUrl] = useState('/welcome');
   const [isReadyToRender, setIsReadyToRender] = useState(false);
 
   useEffect(() => {
