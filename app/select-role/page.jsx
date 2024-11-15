@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import {
   Select,
   SelectContent,
@@ -21,7 +22,35 @@ export default function SelectRole() {
     setSelectedRole(value);
   };
 
-  // Handle form submission to update metadata
+  // Function to add user to the database
+  const handleAddUser = async () => {
+    if (user) {
+      try {
+        // Send a POST request to add user details to your backend
+        const response = await axios.post('http://localhost:8080/api/users', {
+          username: user.username || 'default_username', // Use a fallback if username is not available
+          email: user.primaryEmailAddress?.emailAddress,
+          role: selectedRole, // Use the selected role here
+          password: 'default_password', // Replace with your password logic if needed
+        });
+
+        if (response.status === 201 || response.status === 200) {
+          console.log('User added successfully:', response.data);
+          alert('User added successfully!');
+        } else {
+          console.error('Failed to add user:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error adding user:', error.response ? error.response.data : error.message);
+        alert('Failed to add user.');
+      }
+    } else {
+      console.error('No user data available.');
+      alert('User not logged in.');
+    }
+  };
+
+  // Handle form submission to update metadata and add user to database
   const handleSubmit = async () => {
     if (!selectedRole) {
       alert('Please select a role');
@@ -36,6 +65,9 @@ export default function SelectRole() {
           role: selectedRole, // Set the selected role in the user's unsafe metadata
         },
       });
+
+      // Call handleAddUser to send data to the backend after setting the role
+      await handleAddUser();
 
       // Redirect after update to the new route based on the selected role
       router.push(`/dashboard/${selectedRole}`); // Redirect dynamically based on selected role
