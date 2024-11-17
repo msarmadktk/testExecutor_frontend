@@ -28,10 +28,11 @@ export default function SelectRole() {
       try {
         // Send a POST request to add user details to your backend
         const response = await axios.post('http://localhost:8080/api/users', {
-          username: user.username || 'default_username', // Use a fallback if username is not available
+          userID: user.id,
+          name: user.username || 'default_name', // Use 'name' instead of 'username'
           email: user.primaryEmailAddress?.emailAddress,
-          role: selectedRole, // Use the selected role here
-          password: 'default_password', // Replace with your password logic if needed
+          role: selectedRole,
+          password: 'default_password', // Update this as per your password logic
         });
 
         if (response.status === 201 || response.status === 200) {
@@ -41,8 +42,9 @@ export default function SelectRole() {
           console.error('Failed to add user:', response.statusText);
         }
       } catch (error) {
-        console.error('Error adding user:', error.response ? error.response.data : error.message);
-        alert('Failed to add user.');
+        const errorMessage = error.response?.data?.message || error.message;
+        console.error('Error adding user:', errorMessage);
+        alert(`Failed to add user: ${errorMessage}`);
       }
     } else {
       console.error('No user data available.');
@@ -62,7 +64,7 @@ export default function SelectRole() {
       await user.update({
         unsafeMetadata: {
           ...user.unsafeMetadata,
-          role: selectedRole, // Set the selected role in the user's unsafe metadata
+          role: selectedRole,
         },
       });
 
@@ -70,14 +72,14 @@ export default function SelectRole() {
       await handleAddUser();
 
       // Redirect after update to the new route based on the selected role
-      router.push(`/dashboard/${selectedRole}`); // Redirect dynamically based on selected role
+      router.push(`/dashboard/${selectedRole}`);
     } catch (error) {
-      alert(`There was an error updating your role: ${error.message}`); // Display a more detailed error message
+      alert(`There was an error updating your role: ${error.message}`);
     }
   };
 
   if (!isSignedIn) {
-    return <div>Please sign in first</div>; // Optional: Show a message if not signed in
+    return <div>Please sign in first</div>;
   }
 
   return (
